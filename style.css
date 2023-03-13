@@ -1,0 +1,63 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    min-height: 100vh;
+    width: 100vw;
+    background-color: whitesmoke;
+}
+
+section {
+    margin-bottom: 50px;
+}
+
+
+.main {
+    height:10vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    letter-spacing: 1px;
+    background-color: rgb(231, 231, 231);
+}
+
+#wrap-form-new-user {
+    height: 40vh;
+}
+
+
+.forme {
+    padding: 10px;
+    border: solid white 1px;
+    width: 50%;
+    margin: auto;
+    background-color: darkgray;
+    color:white;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 20px;
+    border-radius: 20px;
+    transition: all 0.6s ease-in-out;
+}
+
+.forme:hover {
+    box-shadow: 0 0 15px 1px lightslategray;
+}
+
+.wrap-open-form-new-user {
+    display: flex;
+    justify-content: end;
+    margin-right: 50px;
+}
+
+label {
+    font-weight: bold;
+    color: white;
+    padding-left:50px;
+}
+
+.error-msg {
+    color:red;
+}
