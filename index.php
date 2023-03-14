@@ -23,31 +23,33 @@
     <section style="display:none" id="wrap-form-new-user">
         <form class="forme" name="form-new-user" method="POST">
             <p class="info text-center" style="letter-spacing:1px"><strong>NUOVO UTENTE</strong></p>
-            <div class="row">
+            <div class="row mb-2">
                 <div class="col-6">
-                    <p class="error-msg" id="errName-new"></p>
+                    
                     <label class="form-label" for="new-name">NAME</label>
                     <input id="new-name" class="form-control">
+                    <div class="mb-2"><p class="error-msg" id="errName-new"></p></div>
                 </div>
                 <div class="col-6" >
-                    <p class="error-msg" id="errSurname-new"></p>
                     <label class="form-label" for="new-surname">SURNAME</label>
                     <input id="new-surname" class="form-control">
+                    <div class="mb-2"><p class="error-msg" id="errSurname-new"></p></div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-4">
-                    <p class="error-msg" id="errAge-new"></p>
                     <label class="form-label" for="new-age">AGE</label>
-                    <input  id="new-age" class="form-control">
+                    <input type="number"  id="new-age" class="form-control">
+                    <div class="mb-2"><p class="error-msg" id="errAge-new"></p></div>
                 </div>
                 <div class="col-8">
-                    <p class="error-msg" id="errMail-new"></p>
+                    
                     <label class="form-label" for="new-mail">MAIL</label>
                     <input  id="new-mail" class="form-control">
+                    <div class="mb-2"><p class="error-msg" id="errMail-new"></p></div>
                 </div>
             </div>
-            <div class="row mt-3">
+            <div class="row mt-3 mb-2">
                 <div class="col-3 text-center">
                     <button id="btn-new-reset" type="button" class="btn btn-outline-danger">
                         <i class="fa-solid fa-circle-xmark"></i>
@@ -67,7 +69,7 @@
 
         <form class="forme" name="form-update-user" method="POST">
                 <p class="info text-center">Aggiorna utente<strong><span id="user"></span></strong></p>
-                <div class="row">
+                <div class="row mb-2">
                     <div class="col-6">
                         <p class="error-msg" id="errName-update"></p>
                         <label class="form-label" for="update-name">NAME</label>
@@ -79,11 +81,11 @@
                         <input id="update-surname" class="form-control">
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mb-2">
                     <div class="col-4">
                         <p class="error-msg" id="errAge-update"></p>
                         <label class="form-label" for="update-age">AGE</label>
-                        <input  id="update-age" class="form-control">
+                        <input type="number" id="update-age" class="form-control">
                     </div>
                     <div class="col-8">
                         <p class="error-msg" id="errMail-update"></p>
@@ -91,7 +93,7 @@
                         <input  id="update-mail" class="form-control">
                     </div>
                 </div>
-                <div class="row mt-3">
+                <div class="row mt-3 mb-2">
                     <div class="col-3 text-center">
                         <button id="btn-update-reset" type="button" class="btn btn-outline-danger">
                             <i class="fa-solid fa-circle-xmark"></i>
