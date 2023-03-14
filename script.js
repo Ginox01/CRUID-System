@@ -47,13 +47,17 @@ function openNewUserForm() {
   wrapUpdateUserForm.style.display = "none";
 }
 
+function clearTable() {
+  wrapTable.innerHTML = "";
+}
 
 generateTable();
-function generateTable(){
-  fetch("./php/read.php").then(res=>res.json())
-  .then(data=>{
-    if(data.response == "empty"){
-      wrapTable.innerHTML = `
+function generateTable() {
+  fetch("./php/read.php")
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.response == "empty") {
+        wrapTable.innerHTML = `
         <div class='row d-flex justify-content-center my-5'>
           <div class='col-6 text-center'>
             <div class="alert alert-dark" role="alert">
@@ -61,13 +65,13 @@ function generateTable(){
             </div>
           </div>
         </div>
-      ` 
-      return;
-    };
-    let table = `
+      `;
+        return;
+      }
+      let table = `
       <div class='row d-flex justify-content-center text-center'>
         <div class='col-lg-8'>
-          <table class='table table-striped table-hover table-light'>
+          <table class='table table-striped table-hover table-dark text-center'>
             <thead>
               <tr>
                 <th>ID</th>
@@ -75,6 +79,7 @@ function generateTable(){
                 <th>SURNAME</th>
                 <th>AGE</th>
                 <th>MAIL</th>
+                <th>ACTIONS</th>
               </tr>
             </thead>
             <tbody>
@@ -84,13 +89,20 @@ function generateTable(){
         </div>
       </div>
     `;
-    wrapTable.innerHTML = table;  
-  })
+      wrapTable.innerHTML = table;
+      const btnsDelete = document.querySelectorAll(".btns-delete");
+      const btnsUpdate = document.querySelectorAll(".btns-update");
+
+      for (let x = 0; x < btnsDelete.length; x++) {
+        btnsDelete[x].addEventListener("click", deleteUser);
+        btnsUpdate[x].addEventListener("click", updateUser);
+      }
+    });
 }
 
-function createRows(people){
-  let rows = '';
-  person.foreach(person=>{
+function createRows(people) {
+  let rows = "";
+  people.map((person) => {
     let row = `
       <tr>
         <td>${person.id}</td>
@@ -99,117 +111,165 @@ function createRows(people){
         <td>${person.age}</td>
         <td>${person.mail}</td>
         <td>
-          <button data-delete='${person.id}' class='btn btn-sm btn-danger btn-delete'>
+          <button data-delete='${person.id}' class='btn btn-sm btn-danger btns-delete'>
             <i class='fas fa-trash'></i>
           </button>
-          <button data-update='${person.id}' class='btn btn-sm btn-success btn-update'>
+          <button data-update='${person.id}' class='btn btn-sm btn-success btns-update'>
             <i class='fas fa-pen'></i>
           </button>
         </td>
       </tr>
     `;
     rows += row;
-  })
+  });
 
   return rows;
 }
 
-btnSubmitNewForm.addEventListener("click",()=>{
-  checkValidations(newName,newSurname,newAge,newMail,errNewName,errNewSurname,errNewAge,errNewMail);
-  console.log('ok');
-})
+btnSubmitNewForm.addEventListener("click", () => {
+  checkValidations(
+    newName,
+    newSurname,
+    newAge,
+    newMail,
+    errNewName,
+    errNewSurname,
+    errNewAge,
+    errNewMail,
+    "new",
+    getTheId
+  );
+});
 
-function checkValidations(name,surname,age,mail,errName,errSurname,errAge,errMail,typeFetch//++++++) {
-  checkName(name,errName);
-  checkSurname(surname,errSurname);
-  checkAge(age,errAge);
-  checkMail(mail,errMail);
+function checkValidations(
+  name,
+  surname,
+  age,
+  mail,
+  errName,
+  errSurname,
+  errAge,
+  errMail,
+  typeFetch,
+  getTheId
+) {
+  checkName(name, errName);
+  checkSurname(surname, errSurname);
+  checkAge(age, errAge);
+  checkMail(mail, errMail);
 
-  if(stepName == true &&
+  if (
+    stepName == true &&
     stepSurname == true &&
     stepAge == true &&
-    stepMail == true){
-      if(//teyy++)
-    }
+    stepMail == true
+  ) {
+    sendDataToServer(
+      name,
+      surname,
+      age,
+      mail,
+      errName,
+      errSurname,
+      errAge,
+      errMail,
+      typeFetch,
+      getTheId
+    );
+  }
 }
 
-function checkName(name,errName) {
-  if(name.value.length < 4){
+function checkName(name, errName) {
+  if (name.value.length < 4) {
     stepName = false;
     errName.style.display = "block";
-    errName.innerHTML = 'Name field must be at least 4 chars long';
+    errName.innerHTML = "Name field must be at least 4 chars long";
     name.className = "form-control is-invalid";
-  }else {
+  } else {
     stepName = true;
     errName.style.display = "none";
     errName.innerHTML = "";
-    name.className = "form-control is-valid"
+    name.className = "form-control is-valid";
   }
 }
 
-function checkSurname(surname,errSurname) {
-  if(surname.value.length < 4){
+function checkSurname(surname, errSurname) {
+  if (surname.value.length < 4) {
     stepSurname = false;
     errSurname.style.display = "block";
-    errSurname.innerHTML = 'Surname field must be at least 4 chars long';
-    surname.className = "form-control is-invalid"
-  }else {
+    errSurname.innerHTML = "Surname field must be at least 4 chars long";
+    surname.className = "form-control is-invalid";
+  } else {
     stepSurname = true;
     errSurname.style.display = "none";
     errSurname.innerHTML = "";
-    surname.className = "form-control is-valid"
+    surname.className = "form-control is-valid";
   }
 }
 
-function checkAge(age,errAge) {
-
-  if(age.value < 18){
+function checkAge(age, errAge) {
+  if (age.value < 18) {
     stepAge = false;
     errAge.style.display = "block";
     errAge.innerHTML = "The User must have at least 18 years old";
     age.className = "form-control is-invalid";
-  }else if(age.value > 99){
+  } else if (age.value > 99) {
     stepAge = false;
     errAge.style.display = "block";
     errAge.innerHTML = "The most age allow is 99 years old";
     age.className = "form-control is-invalid";
-  }else {
+  } else {
     stepAge = true;
     errAge.style.display = "";
     errAge.innerHTML = "";
     age.className = "form-control is-valid";
   }
-
 }
 
-function checkMail(mail,errMail) {
-
+function checkMail(mail, errMail) {
   test = /@/;
 
-  if(mail.value.length < 8){
+  if (mail.value.length < 8) {
     stepMail = false;
     errMail.style.display = "block";
     errMail.innerHTML = "Mail field must be at least 8 chars long";
     mail.className = "form-control is-invalid";
-  }else if(!mail.value.match(test)){
+  } else if (!mail.value.match(test)) {
     stepMail = false;
     errMail.style.display = "block";
     errMail.innerHTML = "The mail field miss the char: '@'";
     mail.className = "form-control is-invalid";
-  }else {
-    stepMail= true;
+  } else {
+    stepMail = true;
     errMail.style.display = "none";
-    errMail.innerHTML ="";
+    errMail.innerHTML = "";
     mail.className = "form-control is-valid";
   }
-
 }
 
-btnResetFormNew.addEventListener('click',()=>{
-  resetForm(newName,newSurname,newAge,newMail,errNewName,errNewSurname,errNewAge,errNewMail);
+btnResetFormNew.addEventListener("click", () => {
+  resetForm(
+    newName,
+    newSurname,
+    newAge,
+    newMail,
+    errNewName,
+    errNewSurname,
+    errNewAge,
+    errNewMail
+  );
 });
-btnUpdateResetForm.addEventListener('click',resetForm);
-function resetForm(name,surname,age,mail,errName,errSurname,errAge,errMail){
+btnUpdateResetForm.addEventListener("click", resetForm);
+function resetForm(
+  name,
+  surname,
+  age,
+  mail,
+  errName,
+  errSurname,
+  errAge,
+  errMail
+) {
   name.className = "form-control";
   name.value = "";
   surname.className = "form-control";
@@ -227,28 +287,68 @@ function resetForm(name,surname,age,mail,errName,errSurname,errAge,errMail){
   stepSurname = false;
   stepAge = false;
   stepMail = false;
-  
 }
 
+function sendDataToServer(
+  name,
+  surname,
+  age,
+  mail,
+  errName,
+  errSurname,
+  errAge,
+  errMail,
+  typeFetch
+) {
+  if (typeFetch == "new") {
+    let formData = new FormData();
+    formData.append("name", name.value);
+    formData.append("surname", surname.value);
+    formData.append("age", age.value);
+    formData.append("mail", mail.value);
 
-function sendDataToServer(url,name,surname,age,mail,type){
+    fetch("./php/new_user.php", {
+      method: "POST",
+      header: { "Content-Type": "application/json" },
+      body: formData,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        if (data.response == "invalid-mail") {
+          wrapMsgServerFormNewUser.innerHTML = `
+          <div class="row d-flex justify-content-center mt-2">
+            <div class="col-6 text-center">
+              <div class="alert alert-dark" role="alert">
+                ${data.message}
+              </div>
+            </div>
+          </div>
+          `;
+          mail.className = "form-control is-invalid";
+          return;
+        }
+        resetForm(
+          name,
+          surname,
+          age,
+          mail,
+          errName,
+          errSurname,
+          errAge,
+          errMail
+        );
+        wrapNewUserForm.style.display = "none";
+        wrapUpdateUserForm.style.display = "none";
+        clearTable();
+        generateTable();
+      });
+  }
+}
 
+function deleteUser(e) {}
 
-  if(type)
-
-
-  let formData = new FormData;
-  formData.append("name",name.value);
-  formData.append("surname",surname.value);
-  formData.append("age",age.value);
-  formData.append("mail",mail.value);
-
-  fetch(url,{
-    method:"POST",
-    header:{'Content-Type':'application/json'},
-    body:formData
-  }).then(res=>res.json())
-  .then(data =>{
-    console.log(data);
-  })
+function updateUser(e) {
+  console.log(e.target);
+  //insert dataset even in ICON
 }
