@@ -61,8 +61,9 @@
                     </button>
                 </div>
             </div>
+            <div id="wrap-errors-new-msg-by-server"></div>
         </form>
-        <div id="wrap-errors-new-msg-by-server"></div>
+        
     </section>
 
     <section style="display:none" id="wrap-form-update-user">

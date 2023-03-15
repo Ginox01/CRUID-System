@@ -259,8 +259,17 @@ btnResetFormNew.addEventListener("click", () => {
     errNewMail
   );
 });
-btnUpdateResetForm.addEventListener("click", ()=>{
-  resetForm(updateName,updateSurname,updateAge,updateMail,errUpdateName,errUpdateSurname,errUpdateAge,errUpdateMail)
+btnUpdateResetForm.addEventListener("click", () => {
+  resetForm(
+    updateName,
+    updateSurname,
+    updateAge,
+    updateMail,
+    errUpdateName,
+    errUpdateSurname,
+    errUpdateAge,
+    errUpdateMail
+  );
 });
 function resetForm(
   name,
@@ -343,43 +352,74 @@ function sendDataToServer(
         );
         wrapNewUserForm.style.display = "none";
         wrapUpdateUserForm.style.display = "none";
+        wrapMsgServerFormNewUser.innerHTML = "";
         clearTable();
         generateTable();
       });
-  }else if(typeFetch == "update"){
+  } else if (typeFetch == "update") {
     //SEND DATA TO UPDATE USER
-    let formData = new FormData;
-    formData.append('id',id);
-    formData.append('name',name);
-    formData.append('surname',surname);
-    formData.append('age',age);
-    formData.append('mail',mail);
+    let formData = new FormData();
+    formData.append("id", id);
+    formData.append("name", name.value);
+    formData.append("surname", surname.value);
+    formData.append("age", age.value);
+    formData.append("mail", mail.value);
 
-    fetch("./php/update.php",{
-      method:"POST",
-      header:{"Content-Type":"application/json"},
-      body:formData
-    }).then(res=>res.json())
-    .then(data=>{
-      
+    fetch("./php/update.php", {
+      method: "POST",
+      header: { "Content-Type": "application/json" },
+      body: formData,
     })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.response == "invalid-mail") {
+          wrapMsgServerFormUpdateUser.innerHTML = `
+          <div class="row d-flex justify-content-center mt-2">
+            <div class="col-6 text-center">
+              <div class="alert alert-dark" role="alert">
+                ${data.message}
+              </div>
+            </div>
+          </div>
+          `;
+          mail.className = "form-control is-invalid";
+          console.log(data);
+          return;
+        }
+        resetForm(
+          name,
+          surname,
+          age,
+          mail,
+          errName,
+          errSurname,
+          errAge,
+          errMail
+        );
+
+        wrapUpdateUserForm.style.display = "none";
+        wrapMsgServerFormUpdateUser.innerHTML = "";
+        clearTable();
+        generateTable();
+      });
   }
 }
 
 function deleteUser(e) {
-    let formData = new FormData;
-    formData.append('id',e.target.dataset.delete);
+  let formData = new FormData();
+  formData.append("id", e.target.dataset.delete);
 
-    fetch("./php/delete.php",{
-      method:"POST",
-      header:{"Content-type":"application/json"},
-      body:formData
-    }).then(res=>res.json())
-    .then(data=>{
+  fetch("./php/delete.php", {
+    method: "POST",
+    header: { "Content-type": "application/json" },
+    body: formData,
+  })
+    .then((res) => res.json())
+    .then((data) => {
       console.log(data);
       clearTable();
       generateTable();
-    })
+    });
 }
 
 function openFormUpdateUser(e) {
@@ -387,29 +427,39 @@ function openFormUpdateUser(e) {
 
   wrapNewUserForm.style.display = "none";
   wrapUpdateUserForm.style.display = "";
-  
-  let formData = new FormData;
-  formData.append('id',getTheId);
 
-  fetch("./php/get-user.php",{
-    method:"POST",
-    header:{"Content-Type":"application/json"},
-    body:formData
-  }).then(res=>res.json())
-  .then(data=>{
-    if(data.response == 1){
-      updateName.value = data.content.name;
-      updateSurname.value = data.content.surname;
-      updateAge.value = data.content.age;
-      updateMail.value = data.content.mail;
-      infoUser.innerHTML = " " + data.content.name + " " + data.content.surname;
-    };
+  let formData = new FormData();
+  formData.append("id", getTheId);
+
+  fetch("./php/get-user.php", {
+    method: "POST",
+    header: { "Content-Type": "application/json" },
+    body: formData,
   })
-
-  
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.response == 1) {
+        updateName.value = data.content.name;
+        updateSurname.value = data.content.surname;
+        updateAge.value = data.content.age;
+        updateMail.value = data.content.mail;
+        infoUser.innerHTML =
+          " " + data.content.name + " " + data.content.surname;
+      }
+    });
 }
 
-
-btnUpdateSubmitForm.addEventListener('click',()=>{
-  checkValidations(updateName,updateSurname,updateAge,updateMail,errUpdateName,errUpdateSurname,errUpdateAge,errUpdateMail,"update",getTheId);
-})
+btnUpdateSubmitForm.addEventListener("click", () => {
+  checkValidations(
+    updateName,
+    updateSurname,
+    updateAge,
+    updateMail,
+    errUpdateName,
+    errUpdateSurname,
+    errUpdateAge,
+    errUpdateMail,
+    "update",
+    getTheId
+  );
+});
