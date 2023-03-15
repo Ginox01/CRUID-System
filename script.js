@@ -70,7 +70,7 @@ function generateTable() {
       }
       let table = `
       <div class='row d-flex justify-content-center text-center'>
-        <div class='col-lg-8'>
+        <div class='col-md-8'>
           <table class='table table-striped table-hover table-dark text-center'>
             <thead>
               <tr>
@@ -95,7 +95,7 @@ function generateTable() {
 
       for (let x = 0; x < btnsDelete.length; x++) {
         btnsDelete[x].addEventListener("click", deleteUser);
-        btnsUpdate[x].addEventListener("click", updateUser);
+        btnsUpdate[x].addEventListener("click", openFormUpdateUser);
       }
     });
 }
@@ -112,10 +112,10 @@ function createRows(people) {
         <td>${person.mail}</td>
         <td>
           <button data-delete='${person.id}' class='btn btn-sm btn-danger btns-delete'>
-            <i class='fas fa-trash'></i>
+            <i data-delete='${person.id}' class='fas fa-trash'></i>
           </button>
           <button data-update='${person.id}' class='btn btn-sm btn-success btns-update'>
-            <i class='fas fa-pen'></i>
+            <i data-update='${person.id}'  class='fas fa-pen'></i>
           </button>
         </td>
       </tr>
@@ -259,7 +259,9 @@ btnResetFormNew.addEventListener("click", () => {
     errNewMail
   );
 });
-btnUpdateResetForm.addEventListener("click", resetForm);
+btnUpdateResetForm.addEventListener("click", ()=>{
+  resetForm(updateName,updateSurname,updateAge,updateMail,errUpdateName,errUpdateSurname,errUpdateAge,errUpdateMail)
+});
 function resetForm(
   name,
   surname,
@@ -298,7 +300,8 @@ function sendDataToServer(
   errSurname,
   errAge,
   errMail,
-  typeFetch
+  typeFetch,
+  id
 ) {
   if (typeFetch == "new") {
     let formData = new FormData();
@@ -315,7 +318,7 @@ function sendDataToServer(
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        if (data.response == "invalid-mail") {
+        if (data.response == "err-mail") {
           wrapMsgServerFormNewUser.innerHTML = `
           <div class="row d-flex justify-content-center mt-2">
             <div class="col-6 text-center">
@@ -343,12 +346,70 @@ function sendDataToServer(
         clearTable();
         generateTable();
       });
+  }else if(typeFetch == "update"){
+    //SEND DATA TO UPDATE USER
+    let formData = new FormData;
+    formData.append('id',id);
+    formData.append('name',name);
+    formData.append('surname',surname);
+    formData.append('age',age);
+    formData.append('mail',mail);
+
+    fetch("./php/update.php",{
+      method:"POST",
+      header:{"Content-Type":"application/json"},
+      body:formData
+    }).then(res=>res.json())
+    .then(data=>{
+      
+    })
   }
 }
 
-function deleteUser(e) {}
+function deleteUser(e) {
+    let formData = new FormData;
+    formData.append('id',e.target.dataset.delete);
 
-function updateUser(e) {
-  console.log(e.target);
-  //insert dataset even in ICON
+    fetch("./php/delete.php",{
+      method:"POST",
+      header:{"Content-type":"application/json"},
+      body:formData
+    }).then(res=>res.json())
+    .then(data=>{
+      console.log(data);
+      clearTable();
+      generateTable();
+    })
 }
+
+function openFormUpdateUser(e) {
+  getTheId = e.target.dataset.update;
+
+  wrapNewUserForm.style.display = "none";
+  wrapUpdateUserForm.style.display = "";
+  
+  let formData = new FormData;
+  formData.append('id',getTheId);
+
+  fetch("./php/get-user.php",{
+    method:"POST",
+    header:{"Content-Type":"application/json"},
+    body:formData
+  }).then(res=>res.json())
+  .then(data=>{
+    if(data.response == 1){
+      updateName.value = data.content.name;
+      updateSurname.value = data.content.surname;
+      updateAge.value = data.content.age;
+      updateMail.value = data.content.mail;
+      infoUser.innerHTML = " " + data.content.name + " " + data.content.surname;
+    };
+  })
+
+  
+}
+
+
+btnUpdateSubmitForm.addEventListener('click',()=>{
+  checkValidations(updateName,updateSurname,updateAge,updateMail,errUpdateName,errUpdateSurname,errUpdateAge,errUpdateMail,"update",getTheId);
+})

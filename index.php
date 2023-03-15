@@ -14,7 +14,7 @@
         <h2>CRUID SYSTEM</h2>
     </section>
 
-    <div class="wrap-open-form-new-user">
+    <div class="wrap-open-form-new-user mb-3">
         <button type="button" id="btn-open-new-user-form" class="btn btn-dark">NEW USER</button>
     </div>
 
@@ -68,7 +68,7 @@
     <section style="display:none" id="wrap-form-update-user">
 
         <form class="forme" name="form-update-user" method="POST">
-                <p class="info text-center">Aggiorna utente<strong><span id="user"></span></strong></p>
+                <p class="info text-center">Aggiorna utente :<strong><span id="user"></span></strong></p>
                 <div class="row mb-2">
                     <div class="col-6">
                         <p class="error-msg" id="errName-update"></p>
