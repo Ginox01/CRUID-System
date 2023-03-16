@@ -43,6 +43,7 @@ const wrapMsgServerFormUpdateUser = document.getElementById(
 
 btnOpenNewUser.addEventListener("click", openNewUserForm);
 function openNewUserForm() {
+  resetForm(newName,newSurname,newAge,newMail,errNewName,errNewSurname,errNewAge,errNewMail);
   wrapNewUserForm.style.display = "";
   wrapUpdateUserForm.style.display = "none";
 }
@@ -288,11 +289,15 @@ function resetForm(
   age.className = "form-control";
   age.value = "";
   mail.className = "form-control";
-  mail.value = "";
+  mail.value = mail.value;
   errName.innerHTML = "";
+  errName.style.display = "none";
   errSurname.innerHTML = "";
+  errSurname.style.display = "none";
   errAge.innerHTML = "";
+  errAge.style.display = "none";
   errMail.innerHTML = "";
+  errMail.style.display = "none";
 
   stepName = false;
   stepSurname = false;
@@ -423,6 +428,7 @@ function deleteUser(e) {
 }
 
 function openFormUpdateUser(e) {
+  resetForm(updateName,updateSurname,updateAge,updateMail,errUpdateName,errUpdateSurname,errUpdateAge,errUpdateMail);
   getTheId = e.target.dataset.update;
 
   wrapNewUserForm.style.display = "none";
@@ -443,6 +449,7 @@ function openFormUpdateUser(e) {
         updateSurname.value = data.content.surname;
         updateAge.value = data.content.age;
         updateMail.value = data.content.mail;
+        updateMail.disabled = true;
         infoUser.innerHTML =
           " " + data.content.name + " " + data.content.surname;
       }

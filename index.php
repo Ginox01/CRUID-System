@@ -72,26 +72,26 @@
                 <p class="info text-center">Aggiorna utente :<strong><span id="user"></span></strong></p>
                 <div class="row mb-2">
                     <div class="col-6">
-                        <p class="error-msg" id="errName-update"></p>
                         <label class="form-label" for="update-name">NAME</label>
                         <input id="update-name" class="form-control">
+                        <div class="mb-2"><p class="error-msg" id="errName-update"></p></div>
                     </div>
                     <div class="col-6" >
-                        <p class="error-msg" id="errSurname-update"></p>
                         <label class="form-label" for="update-surname">SURNAME</label>
                         <input id="update-surname" class="form-control">
+                        <div class="mb-2"><p class="error-msg" id="errSurname-update"></p></div>
                     </div>
                 </div>
                 <div class="row mb-2">
                     <div class="col-4">
-                        <p class="error-msg" id="errAge-update"></p>
                         <label class="form-label" for="update-age">AGE</label>
                         <input type="number" id="update-age" class="form-control">
+                        <div class="mb-2"><p class="error-msg" id="errAge-update"></p></div>
                     </div>
                     <div class="col-8">
-                        <p class="error-msg" id="errMail-update"></p>
                         <label class="form-label" for="update-mail">MAIL</label>
                         <input  id="update-mail" class="form-control">
+                        <div class="mb-2"><p class="error-msg" id="errMail-update"></p></div>
                     </div>
                 </div>
                 <div class="row mt-3 mb-2">
